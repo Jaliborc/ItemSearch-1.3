@@ -77,6 +77,21 @@ Lib.Filters.level = {
 	end
 }
 
+Lib.Filters.requiredlevel = {
+	tags = {'req', 'rl', 'reqlvl'},
+
+	canSearch = function(self, _, search)
+		return tonumber(search)
+	end,
+
+	match = function(self, link, operator, num)
+		local lvl = select(5, GetItemInfo(link))
+		if lvl then
+			return Search:Compare(operator, lvl, num)
+		end
+	end
+}
+
 
 --[[ Quality ]]--
 
@@ -133,6 +148,36 @@ Lib.Filters.tipPhrases = {
 	canSearch = function(self, _, search)
 		return self.keywords[search]
 	end,
+	
+	canuse = function(self, link, id)
+	
+		local matches = true
+
+		local lvl = select(5, GetItemInfo(link))
+		if lvl > 0 and lvl > UnitLevel("player") then
+			matches = false
+		else
+			local r, g, b = _G['LibItemSearchTooltipScannerTextRight4']:GetTextColor()
+			local text = _G['LibItemSearchTooltipScannerTextRight4']:GetText()
+			if text and text ~= '' and r > g and r > b then --it's red
+				matches = false
+			end
+		end
+		
+		if matches then -- if still true, check for professions and classes
+			for i = 1, scanner:NumLines() do
+				local text = _G['LibItemSearchTooltipScannerTextLeft' .. i]:GetText()
+				local r, g, b = _G['LibItemSearchTooltipScannerTextLeft' .. i]:GetTextColor()
+				if (string.sub(text,1,string.len('Requires'))=='Requires' or string.sub(text,1,string.len('Classes:'))=='Classes:') and r > g and r > b then --it's red
+					matches = false
+					break
+				end
+			end
+		end
+				
+		return matches
+	
+	end,
 
 	match = function(self, link, _, search)
 		local id = link:match('item:(%d+)')
@@ -149,10 +194,14 @@ Lib.Filters.tipPhrases = {
 		scanner:SetHyperlink(link)
 
 		local matches = false
-		for i = 1, scanner:NumLines() do
-			if search == _G['LibItemSearchTooltipScannerTextLeft' .. i]:GetText() then
-				matches = true
-				break
+		if search == self.keywords['usable'] then
+			matches = self:canuse(link, id)
+		else
+			for i = 1, scanner:NumLines() do
+				if search == _G['LibItemSearchTooltipScannerTextLeft' .. i]:GetText() then
+					matches = true
+					break
+				end
 			end
 		end
 
@@ -170,7 +219,8 @@ Lib.Filters.tipPhrases = {
 		['quest'] = ITEM_BIND_QUEST,
 		['boa'] = ITEM_BIND_TO_BNETACCOUNT,
 		['reagent'] = PROFESSIONS_USED_IN_COOKING,
-		[TOY:lower()] = TOY
+		[TOY:lower()] = TOY,
+		['usable'] = 'Item Is Usable'
 	}
 }
 
