@@ -121,7 +121,7 @@ Lib.Filters.quality = {
 
 --[[ Usable ]]--
 
-Lib.Filters.quality = {
+Lib.Filters.usable = {
 	tags = {},
 
 	canSearch = function(self, operator, search)
