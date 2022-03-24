@@ -17,7 +17,7 @@ if C_ArtifactUI then
   end
 end
 
-if C_AzeriteItem then
+if C_AzeriteItem and C_CurrencyInfo.GetAzeriteCurrencyID then
   function Tests:Azerite()
     local shoulder = '\124cffa335ee\124Hitem:161391::::::::120::::2:4822:1477:\124h[Deathshambler\'s Shoulderpads]\124h\124r'
     local heart = '\124cffe5cc80\124Hitem:158075::::::::120:::::\124h[Heart of Azeroth]\124h\124r'
