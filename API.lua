@@ -99,22 +99,6 @@ if IsAddOnLoaded('ItemRack') then
 		end
 	end
 
-elseif IsAddOnLoaded('Wardrobe') then
-	function Lib:BelongsToSet(id, search)
-		if IsEquippableItem(id) then
-			for _, outfit in ipairs(Wardrobe.CurrentConfig.Outfit) do
-				local name = outfit.OutfitName
-				if not search or Parser:Find(search, name) then
-					for _, item in pairs(outfit.Item) do
-						if item.IsSlotUsed == 1 and item.ItemID == id then
-							return true
-						end
-					end
-				end
-			end
-		end
-	end
-
 elseif C_EquipmentSet then
 	function Lib:BelongsToSet(id, search)
 		if IsEquippableItem(id) then
