@@ -1,7 +1,7 @@
-local Tests = WoWUnit and WoWUnit('LibItemSearch-1.2', 'GET_ITEM_INFO_RECEIVED')
+local Tests = WoWUnit and WoWUnit('ItemSearch-1.3', 'GET_ITEM_INFO_RECEIVED')
 if not Tests then return end
 
-local Search =  LibStub('LibItemSearch-1.2')
+local Search =  LibStub('ItemSearch-1.3')
 local IsTrue = WoWUnit.IsTrue
 
 if C_ArtifactUI then
@@ -11,9 +11,6 @@ if C_ArtifactUI then
     IsTrue(Search:Matches(item, 'relic'))
     IsTrue(Search:Matches(item, 'artif'))
     IsTrue(Search:Matches(item, 'artifact'))
-
-    IsTrue(Search:Tooltip(item, 'relic'))
-    IsTrue(Search:Tooltip(item, 'artifact'))
   end
 end
 
@@ -36,7 +33,6 @@ if C_Garrison then
 
     IsTrue(Search:Matches(item, 'champ'))
     IsTrue(Search:Matches(item, 'champion'))
-    IsTrue(Search:Matches(item, 'follow'))
-    IsTrue(Search:Matches(item, 'follower'))
+    IsTrue(Search:Matches(item, 'mission'))
   end
 end
