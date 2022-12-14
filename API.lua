@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 1)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 2)
 if Lib then
 	Lib.Unusable, Lib.Bangs = {}, {}
 	Lib.Filters = nil

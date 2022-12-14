@@ -102,10 +102,7 @@ for i = 0, #ITEM_QUALITY_COLORS do
     Lib.Filters.quality.keywords[i] = _G['ITEM_QUALITY' .. i .. '_DESC']:lower()
 end
 
-
---[[ Modern Exclusive ]]--
-
-if EXPANSION_NAME_0 then
+if LE_EXPANSION_LEVEL_CURRENT > 0 then
     Lib.Filters.expansion = {
         tags = {'e', 'expac', 'expansion'},
         keywords = {},
