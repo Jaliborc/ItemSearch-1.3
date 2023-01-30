@@ -151,7 +151,7 @@ Lib.Filters.level = {
     end,
 
     match = function(self, item, operator, num)
-        local lvl = item.location and Item.GetCurrentItemLevel(item.location)
+        local lvl = item.location and C_Item.GetCurrentItemLevel(item.location)
                     or select(4, GetItemInfo(item.link))
         if lvl then
             return Parser:Compare(operator, lvl, num)
