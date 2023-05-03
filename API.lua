@@ -67,7 +67,7 @@ function Lib:IsQuestItem(id)
 		Lib.Bangs[id] = (function()
 			local lines = C.TooltipInfo.GetItemByID(id).lines
 			for i = 2, min(4, #lines) do
-				if lines[i].args[2].stringVal:find(ITEM_STARTS_QUEST) then
+				if lines[i].leftText:find(ITEM_STARTS_QUEST) then
 					return true
 				end
 			end
