@@ -41,7 +41,7 @@ Lib.Filters.tooltip = {
                      or C.TooltipInfo.GetHyperlink(item.link)
         if data then
             for i, line in ipairs(data.lines) do
-                if Parser:Find(search, line.args[2].stringVal) then
+                if Parser:Find(search, line.leftText) then
                     return true
                 end
             end

@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 3)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 4)
 if Lib then
 	Lib.Unusable, Lib.Bangs = {}, {}
 	Lib.Filters = nil
@@ -50,7 +50,7 @@ function Lib:IsUnusable(id)
 		Lib.Unusable[id] = (function()
 			local lines = C.TooltipInfo.GetItemByID(id).lines
 			for i = #lines-1, 5, -1 do
-				local class = lines[i].args[2].stringVal:match(L.CLASS_REQUIREMENT)
+				local class = lines[i].leftText:match(L.CLASS_REQUIREMENT)
 				if class then
 					return not class:find(L.PLAYER_CLASS)
 				end
