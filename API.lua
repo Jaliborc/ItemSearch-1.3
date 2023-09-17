@@ -36,11 +36,7 @@ local L = {
 --[[ Main API ]]--
 
 function Lib:Matches(item, search)
-	if type(item) == 'table' then
-    	return Parser({location = item, link = C_Item.GetItemLink(item)}, search, self.Filters)
-	else
-		return Parser({link = item}, search, self.Filters)
-	end
+	return Parser({link = item["hyperlink"]}, search, self.Filters)
 end
 
 function Lib:IsUnusable(id)
