@@ -57,7 +57,7 @@ Lib.Filters.class = {
     end,
 
     match = function(self, item, _, search)
-        local class, subClass = select(6, GetItemInfo(item.link))
+        local class, subClass = select(6, C.Item.GetItemInfo(item.link))
         return Parser:Find(search, class, subClass)
     end
 }
@@ -71,7 +71,7 @@ Lib.Filters.level = {
 
     match = function(self, item, operator, num)
         local lvl = item.location and C.Item.GetCurrentItemLevel(item.location)
-                    or select(4, GetItemInfo(item.link))
+                    or select(4, C.Item.GetItemInfo(item.link))
         if lvl then
             return Parser:Compare(operator, lvl, num)
         end
@@ -86,7 +86,7 @@ Lib.Filters.requiredlevel = {
     end,
 
     match = function(self, item, operator, num)
-        local lvl = select(5, GetItemInfo(item.link))
+        local lvl = select(5, C.Item.GetItemInfo(item.link))
         if lvl then
             return Parser:Compare(operator, lvl, num)
         end
@@ -106,7 +106,7 @@ Lib.Filters.bind = {
     end,
 
     match = function(self, item, _, target)
-        return target == select(14, GetItemInfo(item.link))
+        return target == select(14, C.Item.GetItemInfo(item.link))
     end
 }
 
@@ -147,7 +147,7 @@ if LE_EXPANSION_LEVEL_CURRENT > 0 then
         end,
 
         match = function(self, item, operator, target)
-            local expac = select(15, GetItemInfo(item.link))
+            local expac = select(15, C.Item.GetItemInfo(item.link))
             return Parser:Compare(operator, expac, target)
         end
     }
@@ -182,7 +182,7 @@ Lib.Filters.slot = {
     end,
 
     match = function(self, item, _, search)
-        local equipSlot = select(9, GetItemInfo(item.link))
+        local equipSlot = select(9, C.Item.GetItemInfo(item.link))
         return Parser:Find(search, _G[equipSlot])
     end
 }

@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 5)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 6)
 if Lib then
 	Lib.Unusable, Lib.Bangs = {}, {}
 	Lib.Filters = nil
@@ -61,7 +61,7 @@ function Lib:IsUnusable(id)
 end
 
 function Lib:IsQuestItem(id)
-	local _,_,_,_,_,_,_,_,_,_,_,class,_,bind = GetItemInfo(id)
+	local _,_,_,_,_,_,_,_,_,_,_,class,_,bind = C.Item.GetItemInfo(id)
 
 	if (class == Enum.ItemClass.Questitem or bind == LE_ITEM_BIND_ON_ACQUIRE) and Lib.Bangs[id] == nil then
 		Lib.Bangs[id] = (function()
@@ -84,7 +84,7 @@ end
 
 --[[ Equipment Sets ]]--
 
-if C.Addons.IsAddOnLoaded('ItemRack') then
+if C.AddOns.IsAddOnLoaded('ItemRack') then
 	function Lib:BelongsToSet(id, search)
 		if IsEquippableItem(id) then
 			for name, set in pairs(ItemRackUser.Sets) do
