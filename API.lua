@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 6)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 7)
 if Lib then
 	Lib.Unusable, Lib.Bangs = {}, {}
 	Lib.Filters = nil
@@ -37,7 +37,7 @@ local L = {
 
 function Lib:Matches(item, search)
 	if type(item) == 'table' then
-    	return Parser({location = item, link = C_Item.GetItemLink(item)}, search, self.Filters)
+    	return Parser({location = item, link = C_Item.DoesItemExist(item) and C_Item.GetItemLink(item)}, search, self.Filters)
 	else
 		return Parser({link = item}, search, self.Filters)
 	end
