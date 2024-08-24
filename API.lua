@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 7)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 8)
 if Lib then
 	Lib.Unusable, Lib.Bangs = {}, {}
 	Lib.Filters = nil
@@ -37,7 +37,7 @@ local L = {
 
 function Lib:Matches(item, search)
 	if type(item) == 'table' then
-    	return Parser({location = item, link = C_Item.DoesItemExist(item) and C_Item.GetItemLink(item)}, search, self.Filters)
+    	return Parser({location = item, link = C.Item.DoesItemExist(item) and C.Item.GetItemLink(item)}, search, self.Filters)
 	else
 		return Parser({link = item}, search, self.Filters)
 	end
@@ -46,7 +46,7 @@ end
 function Lib:IsUnusable(id)
     if Unfit:IsItemUnusable(id) then
         return true
-	elseif Lib.Unusable[id] == nil and IsEquippableItem(id) then
+	elseif Lib.Unusable[id] == nil and C.Item.IsEquippableItem(id) then
 		Lib.Unusable[id] = (function()
 			local lines = C.TooltipInfo.GetItemByID(id).lines
 			for i = #lines-1, 5, -1 do
@@ -82,11 +82,23 @@ function Lib:IsQuestItem(id)
 end
 
 
---[[ Equipment Sets ]]--
+--[[ Sets and Collections ]]--
+
+if LE_EXPANSION_LEVEL_CURRENT > 2 then
+	function Lib:IsUncollected(id)
+		if C.Item.IsDressableItemByID(id) and not C.TransmogCollection.PlayerHasTransmog(id) then
+			local _, transmog = C.TransmogCollection.GetItemInfo(id)
+			local info = transmog and C.TransmogCollection.GetAppearanceInfoBySource(transmog)
+			return not info or not info.appearanceIsCollected
+		end
+	end
+else
+	Lib.IsUncollected = nop
+end
 
 if C.AddOns.IsAddOnLoaded('ItemRack') then
 	function Lib:BelongsToSet(id, search)
-		if IsEquippableItem(id) then
+		if C.Item.IsEquippableItem(id) then
 			for name, set in pairs(ItemRackUser.Sets) do
 				if name:sub(1,1) ~= '' and (not search or Parser:Find(search, name)) then
 					for _, item in pairs(set.equip) do
@@ -99,13 +111,13 @@ if C.AddOns.IsAddOnLoaded('ItemRack') then
 		end
 	end
 
-elseif C_EquipmentSet then
+elseif LE_EXPANSION_LEVEL_CURRENT > 2 then
 	function Lib:BelongsToSet(id, search)
-		if IsEquippableItem(id) then
-			for i, setID in pairs(C_EquipmentSet.GetEquipmentSetIDs()) do
-				local name = C_EquipmentSet.GetEquipmentSetInfo(setID)
+		if C.Item.IsEquippableItem(id) then
+			for i, setID in pairs(C.EquipmentSet.GetEquipmentSetIDs()) do
+				local name = C.EquipmentSet.GetEquipmentSetInfo(setID)
 				if not search or Parser:Find(search, name) then
-					local items = C_EquipmentSet.GetItemIDs(setID)
+					local items = C.EquipmentSet.GetItemIDs(setID)
 					for _, item in pairs(items) do
 						if id == item then
 							return true
@@ -117,5 +129,5 @@ elseif C_EquipmentSet then
 	end
 
 else
-	function Lib:BelongsToSet() end
+	Lib.BelongsToSet = nop
 end
