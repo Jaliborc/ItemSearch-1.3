@@ -15,9 +15,9 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 8)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 9)
 if Lib then
-	Lib.Unusable, Lib.Bangs = {}, {}
+	Lib.Unusable, Lib.Collected, Lib.Bangs = {}, {}, {}
 	Lib.Filters = nil
 else
 	return
@@ -33,7 +33,7 @@ local L = {
 }
 
 
---[[ Main API ]]--
+--[[ General API ]]--
 
 function Lib:Matches(item, search)
 	if type(item) == 'table' then
@@ -85,11 +85,14 @@ end
 --[[ Sets and Collections ]]--
 
 if LE_EXPANSION_LEVEL_CURRENT > 2 then
-	function Lib:IsUncollected(id)
-		if C.Item.IsDressableItemByID(id) and not C.TransmogCollection.PlayerHasTransmog(id) then
-			local _, transmog = C.TransmogCollection.GetItemInfo(id)
-			local info = transmog and C.TransmogCollection.GetAppearanceInfoBySource(transmog)
-			return not info or not info.appearanceIsCollected
+	function Lib:IsUncollected(id, link)
+		if not Lib.Collected[id] and C.Item.IsDressableItemByID(id) and not C.TransmogCollection.PlayerHasTransmog(id) then
+			local lines = C.TooltipInfo.GetHyperlink(link).lines
+			if #lines > 0 then
+				local missing = lines[#lines].leftText == TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN
+				Lib.Collected[id] = not missing
+				return missing
+			end
 		end
 	end
 else
