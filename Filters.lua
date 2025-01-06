@@ -110,6 +110,37 @@ Lib.Filters.bind = {
     end
 }
 
+Lib.Filters.boa = {
+    keywords = {
+        boa = {
+            ITEM_ACCOUNTBOUND,
+            ITEM_BIND_TO_ACCOUNT,
+            ITEM_BIND_TO_BNETACCOUNT,
+            ITEM_BNETACCOUNTBOUND,
+        },
+    },
+
+    canSearch = function(self, operator, search)
+        return inRetail and not operator and self.keywords[search]
+    end,
+
+    match = function(self, item, _, target)
+        local where = item.location
+        local data = where and (where.bagID and C.TooltipInfo.GetBagItem(where.bagID, where.slotIndex) or
+                     where.equipmentSlotIndex and C.TooltipInfo.GetInventoryItem(where.unitID or 'player', where.equipmentSlotIndex))
+                     or C.TooltipInfo.GetHyperlink(item.link)
+        if data then
+            for i = 2, min(4, #data.lines) do
+                for _, search in pairs(target) do
+                    if data.lines[i].leftText:find(search) then
+                        return true
+                    end
+                end
+            end
+        end
+    end
+}
+
 Lib.Filters.quality = {
     tags = {'q', 'quality', 'rarity'},
     keywords = {},
