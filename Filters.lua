@@ -98,7 +98,7 @@ Lib.Filters.bind = {
         bop = Enum.ItemBind.OnAcquire,
         boe = Enum.ItemBind.OnEquip,
         bou = Enum.ItemBind.OnUse,
-        [C_Item.GetItemClassInfo(Enum.ItemClass.Questitem)] = Enum.ItemBind.Quest,
+        [C.Item.GetItemClassInfo(Enum.ItemClass.Questitem)] = Enum.ItemBind.Quest,
     },
     
     canSearch = function(self, operator, search)
