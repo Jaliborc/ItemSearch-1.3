@@ -27,7 +27,7 @@ local inRetail = C_TooltipInfo and true
 
 Lib.Filters = {}
 Lib.Filters.tooltip = {
-    tags = {'t', 'tip', 'tooltip'},
+    tags = {'tt', 'tip', 'tooltip'},
     onlyTags = not C_TooltipInfo,
 
     canSearch = function(self, operator, search)
@@ -50,7 +50,7 @@ Lib.Filters.tooltip = {
 }
 
 Lib.Filters.class = {
-    tags = {'c', 'class'},
+    tags = {'t', 'type'},
 
     canSearch = function(self, operator, search)
         return not operator and search
@@ -63,7 +63,7 @@ Lib.Filters.class = {
 }
 
 Lib.Filters.level = {
-    tags = {'l', 'level', 'lvl', 'ilvl'},
+    tags = {'l', 'lvl', 'ilvl', 'level'},
 
     canSearch = function(self, operator, search)
         return (operator or not inRetail) and tonumber(search)
@@ -79,7 +79,7 @@ Lib.Filters.level = {
 }
 
 Lib.Filters.requiredlevel = {
-    tags = {'r', 'req', 'rl', 'reql', 'reqlvl'},
+    tags = {'r', 'req', 'rl', 'reqlvl'},
 
     canSearch = function(self, operator, search)
         return (operator or not inRetail) and tonumber(search)
@@ -95,10 +95,10 @@ Lib.Filters.requiredlevel = {
 
 Lib.Filters.bind = {
     keywords = {
-        bop = LE_ITEM_BIND_ON_ACQUIRE,
-        boe = LE_ITEM_BIND_ON_EQUIP,
-        bou = LE_ITEM_BIND_ON_USE,
-        boq = LE_ITEM_BIND_QUEST,
+        bop = Enum.ItemBind.OnAcquire,
+        boe = Enum.ItemBind.OnEquip,
+        bou = Enum.ItemBind.OnUse,
+        [C_Item.GetItemClassInfo(Enum.ItemClass.Questitem)] = Enum.ItemBind.Quest,
     },
     
     canSearch = function(self, operator, search)
@@ -200,7 +200,7 @@ Lib.Filters.bound = {
 }
 
 Lib.Filters.sets = {
-    tags = {'s', 'set'},
+    tags = {'set'},
     onlyTags = inRetail,
 
     canSearch = function(self, operator, search)
