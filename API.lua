@@ -15,7 +15,7 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 11)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 12)
 if Lib then
 	Lib.Unusable, Lib.Collected, Lib.Bangs = {}, {}, {}
 	Lib.Filters = nil
@@ -84,7 +84,7 @@ end
 
 --[[ Sets and Collections ]]--
 
-if LE_EXPANSION_LEVEL_CURRENT > 2 then
+if LE_EXPANSION_LEVEL_CURRENT > 2 and LE_EXPANSION_LEVEL_CURRENT ~= 4 then
 	function Lib:IsUncollected(id, link)
 		if not Lib.Collected[id] and C.Item.IsDressableItemByID(id) and not C.TransmogCollection.PlayerHasTransmog(id) then
 			local data = C.TooltipInfo.GetHyperlink(link)
