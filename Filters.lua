@@ -41,7 +41,7 @@ Lib.Filters.tooltip = {
                      or C.TooltipInfo.GetHyperlink(item.link)
         if data then
             for i, line in ipairs(data.lines) do
-                if Parser:Find(search, line.leftText) then
+                if Parser:FindOne(search, line.leftText) then
                     return true
                 end
             end
@@ -116,7 +116,7 @@ Lib.Filters.quality = {
 
     canSearch = function(self, _, search)
         for quality, name in pairs(self.keywords) do
-          if Parser:Find(search, name) then
+          if name:find(search, 1, true) then
             return quality
           end
         end
@@ -130,7 +130,7 @@ Lib.Filters.quality = {
 }
 
 for i = 0, #ITEM_QUALITY_COLORS do
-    Lib.Filters.quality.keywords[i] = _G['ITEM_QUALITY' .. i .. '_DESC']:lower()
+    Lib.Filters.quality.keywords[i] = Parser:Clean(_G['ITEM_QUALITY' .. i .. '_DESC'])
 end
 
 if LE_EXPANSION_LEVEL_CURRENT > 0 then
@@ -140,7 +140,7 @@ if LE_EXPANSION_LEVEL_CURRENT > 0 then
 
         canSearch = function(self, operator, search)
             for expac, name in pairs(self.keywords) do
-                if Parser:Find(search, name) then
+                if name:find(search, 1, true) then
                     return expac
                 end
             end
@@ -153,7 +153,7 @@ if LE_EXPANSION_LEVEL_CURRENT > 0 then
     }
 
     for i = 0, NUM_LE_EXPANSION_LEVELS do
-        Lib.Filters.expansion.keywords[i] = _G['EXPANSION_NAME' .. i]:lower()
+        Lib.Filters.expansion.keywords[i] = Parser:Clean(_G['EXPANSION_NAME' .. i])
     end
 end
 
@@ -169,7 +169,7 @@ Lib.Filters.name = {
     end,
 
     match = function(self, item, _, search)
-        return Parser:Find(search, C.Item.GetItemNameByID(item.link) or item.link:match('%[(.+)%]'))
+        return Parser:FindOne(search, C.Item.GetItemNameByID(item.link) or item.link:match('%[(.+)%]'))
     end
 }
 
@@ -183,7 +183,7 @@ Lib.Filters.slot = {
 
     match = function(self, item, _, search)
         local equipSlot = select(9, C.Item.GetItemInfo(item.link))
-        return Parser:Find(search, _G[equipSlot])
+        return Parser:FindOne(search, _G[equipSlot])
     end
 }
 
@@ -191,7 +191,7 @@ Lib.Filters.bound = {
     onlyTags = inRetail,
     
     canSearch = function(self, operator, search)
-        return not operator and Parser:Find(search, ITEM_SOULBOUND)
+        return not operator and ITEM_SOULBOUND:find(search, 1, true)
     end,
 
     match = function(self, item)
