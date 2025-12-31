@@ -20,8 +20,19 @@ if Lib.Filters then return end
 
 local C = LibStub('C_Everywhere')
 local Parser = LibStub('CustomSearch-1.0')
-local inRetail = C_TooltipInfo and true
 
+local inRetail = C_TooltipInfo and true
+local staticTooltips = setmetatable({}, {
+    __index = function (t, link)
+        local data = C.TooltipInfo.GetHyperlink(link)
+        if data and #data.lines > 1 then
+            t[link] = data
+        end
+        return data
+    end})
+    
+C_Timer.NewTicker(60, function() wipe(staticTooltips) end)
+    
 
 --[[ Baseline ]]--
 
@@ -38,7 +49,7 @@ Lib.Filters.tooltip = {
         local where = item.location
         local data = where and (where.bagID and C.TooltipInfo.GetBagItem(where.bagID, where.slotIndex) or
                      where.equipmentSlotIndex and C.TooltipInfo.GetInventoryItem(where.unitID or 'player', where.equipmentSlotIndex))
-                     or C.TooltipInfo.GetHyperlink(item.link)
+                     or staticTooltips[item.link]
         if data then
             for i, line in ipairs(data.lines) do
                 if Parser:FindOne(search, line.leftText) then
