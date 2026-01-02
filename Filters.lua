@@ -25,7 +25,7 @@ local inRetail = C_TooltipInfo and true
 local staticTooltips = setmetatable({}, {
     __index = function (t, link)
         local data = C.TooltipInfo.GetHyperlink(link)
-        if data and #data.lines > 1 then
+        if data and (#data.lines > 1 or data.battlePetName) then
             t[link] = data
         end
         return data
@@ -56,6 +56,9 @@ Lib.Filters.tooltip = {
                     return true
                 end
             end
+            return Parser:FindOne(search, data.battlePetName)
+        else
+            return Parser:FindOne(search, item.link)
         end
     end
 }
